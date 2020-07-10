@@ -1,0 +1,24 @@
+.draggable-meal-list-helper-class .meal-item, .meal-item{
+  .meal-fact{
+    margin: 10px;
+  }
+  .description-btn{
+    width: 100%;
+    font-size: 12px;
+    background-color: #C3C3C3;
+    text-align: center;
+    outline:0 !important;
+    line-height:none;
+    height: 20px;
+    &:focus   {outline:0 !important;}
+    &:active  {outline:0 !important; border:none; height:20px}
+  }
+}
+
+.diet{
+  .meal-list{
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid red;
+  }
+}

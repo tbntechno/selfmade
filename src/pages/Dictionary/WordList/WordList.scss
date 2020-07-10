@@ -1,0 +1,25 @@
+.word-list-wrapper{
+  border: 1px red solid;
+  height: 100%;
+  overflow: visible;
+  .word-list{
+    border: 1px blue solid;
+
+    height: 67vh;
+    overflow-y:auto;
+    textarea{
+      resize: none;
+      border: none;
+      outline: none;
+    }
+  }
+  .word-list-add{
+    border: 1px green solid;
+
+    // height: 80%;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    overflow: auto;
+  }
+}

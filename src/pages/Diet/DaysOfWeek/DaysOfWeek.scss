@@ -1,0 +1,86 @@
+.dragging-helper-class .main-stats, .main-stats{
+  font-size: 11px;
+  text-align: center;
+  .meal-name{
+    // background-color: #E6E9EA;
+    text-align: left;
+    padding: 0;
+    img{
+      padding-left:5px;
+      margin-right:5px;
+    }
+  }
+}
+
+// .main-stats{
+//   font-size: 11px;
+//   text-align: center;
+//   .meal-name{
+    
+//     text-align: left;
+//     padding-left:5px;
+//   }
+// }
+.daysofweek{
+  border: 1px solid black;
+  padding: 5px;
+  margin: 5px;
+  .mcol{
+    &:not(:last-child){
+      border-right: 1px solid black;
+    }
+    // border-left: 1px solid black;
+    .day-title {
+      text-align: center;
+      text-decoration: underline;
+      margin:10px;
+    }
+    .day-meal-list{
+      min-height: 300px;
+      .day-meal {
+        // merge to Global draggable css
+        // .main-stats{
+        //   font-size: 11px;
+        //   text-align: center;
+        //   .meal-name{
+            
+        //     text-align: left;
+        //     padding-left:5px;
+        //   }
+        // }
+      }
+    }
+    .meal-stat{ 
+      margin-top: 24px;
+      .slide-button{
+        font-size: 12px;
+        background:#C3C3C3;
+        color:white;
+        width:100%;
+        text-align: center;
+      }
+
+      .stat-table{
+        background-color: #ECF0F1;
+        font-size:12px;
+      }
+    }
+  }
+}
+
+.Protein{
+  color: white;
+  background: #D05B54;
+}
+.Carbohydrates{
+  color: white;
+  background: #4E99C5;
+}
+.Fat{
+  color: white;
+  background:#00BC9C;
+}
+.Calories{
+  color: white;
+  background: #2B3E4F;
+}

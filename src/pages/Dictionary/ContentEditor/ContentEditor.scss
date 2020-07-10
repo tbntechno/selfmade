@@ -1,0 +1,16 @@
+.content-editor{
+  .quill{
+    height: 80vh;
+    overflow: auto;
+    .ql-toolbar{
+      min-height: 48px;
+      font-family: 'Sailec Light', sans-serif;
+      border:none;
+      border-bottom: 1px solid rgba(0,0,0,0.12) !important;
+    }
+    .ql-container{
+      border:none;
+      background-color: #f5f5f5;
+    }
+  }
+}

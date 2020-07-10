@@ -1,0 +1,14 @@
+.login {
+  .btn-login{
+    background-color: #474772 !important;
+    color: white;
+  }
+  .joi-login-error, .server-login-error{
+    margin:12px;
+    padding:0px 7px;
+    background-color: #f44336; /* Red */
+    border-radius: 5px;
+    color: white;
+    margin-bottom: 15px;
+  }
+}
