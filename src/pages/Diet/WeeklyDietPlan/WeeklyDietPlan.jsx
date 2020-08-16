@@ -5,7 +5,7 @@ import firebase, {db} from '../../../services/firebase';
 import _ from 'lodash';
 import check from 'check-types';
 import clone from 'clone-deep';
-import "./DaysOfWeek.scss"
+import "./WeeklyDietPlan.scss"
 import { useEffect } from 'react';
 
 import SlideDown from '../../../components/SlideDown/SlideDown'
@@ -97,7 +97,7 @@ const SortableList = SortableContainer(({dietPlan, meals, items, dayName, tableI
     </div>
   );
 });
-const DaysOfWeek = ({meals, dietPlan, setDietPlan, DAYS_OF_WEEK}) => {
+const WeeklyDietPlan = ({meals, dietPlan, setDietPlan, DAYS_OF_WEEK}) => {
   const sortableHandler = (tableIndex, oldIndex, newIndex) => {
     let updatedDietPlan = clone(dietPlan);
     updatedDietPlan.data[tableIndex] = arrayMove(dietPlan.data[tableIndex], oldIndex, newIndex);
@@ -126,4 +126,4 @@ const DaysOfWeek = ({meals, dietPlan, setDietPlan, DAYS_OF_WEEK}) => {
     </div>
   )
 }
-export default DaysOfWeek;
+export default WeeklyDietPlan;

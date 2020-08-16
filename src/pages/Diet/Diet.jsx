@@ -2,20 +2,9 @@ import React, {useState,useEffect} from 'react';
 import './Diet.scss';
 import {db} from '../../services/firebase';
 import _ from 'lodash';
-import DaysOfWeek           from './DaysOfWeek/DaysOfWeek';
-import DaysOfWeekController from './DaysOfWeekController/DaysOfWeekController'
+import WeeklyDietPlan       from './WeeklyDietPlan/WeeklyDietPlan';
+import WeeklyDietPlanEditor from './WeeklyDietPlanEditor/WeeklyDietPlanEditor'
 import MealList             from './MealList/MealList';
-
-// const nutritionTemplate   = [
-//   'Protein', 'Carbohydrates', 'Fiber', 'Sugars',
-//   'Fat', 'Saturated', 'Polyunsaturated','Monounsaturated', 
-//   'Trans', 'Cholesterol', 'Sodium', 'Potassium', 
-//   'Vitamin A', 'Vitamin C', 'Calcium', 'Iron'
-// ];
-// const nutritionGoal = [
-//   201, 268, 38, 101, 89, 30, 0, 0, 0, 300, 2300, 3500,
-//   100, 100, 100, 100
-// ]
 
 const nutritionPlan = {
   planName: "first one",
@@ -121,8 +110,8 @@ const Diet = () => {
   return (
     <div className="diet">
       <div className="container-fluid">
-        <DaysOfWeek           meals={meals} dietPlan={dietPlan} DAYS_OF_WEEK={DAYS_OF_WEEK} setDietPlan={setDietPlan}/>
-        <DaysOfWeekController meals={_.sortBy(meals,'order')} dietPlan={dietPlan} DAYS_OF_WEEK={DAYS_OF_WEEK}/>   
+        <WeeklyDietPlan       meals={meals} dietPlan={dietPlan} DAYS_OF_WEEK={DAYS_OF_WEEK} setDietPlan={setDietPlan}/>
+        <WeeklyDietPlanEditor meals={_.sortBy(meals,'order')} dietPlan={dietPlan} DAYS_OF_WEEK={DAYS_OF_WEEK}/>   
         <MealList             meals={_.sortBy(meals,'order')} setMeals={setMeals}/>
         {/* <button onClick={newMealHandler}>New Meal</button> */}
         <button onClick={testHandler}>Test</button>

@@ -1,11 +1,11 @@
 import React, {useState,useEffect} from 'react';
-import './DaysOfWeekController.scss';
+import './WeeklyDietPlanEditor.scss';
 import {db} from '../../../services/firebase';
 import _ from 'lodash';
 import check from 'check-types';
 import clone from 'clone-deep';
 
-const DaysOfWeekController = ({dietPlan, meals, DAYS_OF_WEEK}) => {
+const WeeklyDietPlanEditor = ({dietPlan, meals, DAYS_OF_WEEK}) => {
   // Add Form
   const [seletedDayAddMeal, setSeletedDayAddMeal]   = useState(0);
   const [seletedMealAddMeal, setSeletedMealAddMeal] = useState("");
@@ -107,4 +107,4 @@ const DaysOfWeekController = ({dietPlan, meals, DAYS_OF_WEEK}) => {
     </div>
   )
 }
-export default DaysOfWeekController;
+export default WeeklyDietPlanEditor;
