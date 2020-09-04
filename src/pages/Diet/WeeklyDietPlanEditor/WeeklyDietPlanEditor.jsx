@@ -72,7 +72,7 @@ const WeeklyDietPlanEditor = ({dietPlan, meals, DAYS_OF_WEEK}) => {
     console.log(selectedDayRemoveMeal, selectedMealRemoveMeal);
   }
   return (
-    <div className="daysofweek-controller row">
+    <div className="weekly-diet-plan-editor row">
       <div className="col-6">
         <select className="day-select form-control" onChange={(e)=>{setSeletedDayAddMeal(e.target.value)}}>
           {DAYS_OF_WEEK && DAYS_OF_WEEK.map((dayName,i) =>{

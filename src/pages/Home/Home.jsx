@@ -8,7 +8,7 @@ import { Redirect }       from "react-router-dom";
 
 const Home = () => {
   const user = firebase.auth().currentUser;
-  if (user) return <Redirect to="/dictionary" />;
+  if (user) return <Redirect to="/diet" />;
   return (
     <div className="container-fluid">
       <div className="main row no-gutter">

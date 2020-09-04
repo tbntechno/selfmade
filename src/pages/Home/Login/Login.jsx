@@ -53,7 +53,7 @@ const Login = ({ history }) => {
       await firebase
         .auth()
         .signInWithEmailAndPassword(account.username, account.password);
-      history.push("/dictionary");
+      history.push("/diet");
     } catch (error) {
       alert(error);
     }

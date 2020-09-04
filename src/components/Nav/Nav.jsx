@@ -4,7 +4,7 @@ import { AuthContext }          from "../../services/auth";
 import './Nav.scss';
 const Nav = () => {
   const { currentUser } = useContext(AuthContext); // THIS is for update NAV bar React STATE!
-  const user            = firebase.auth().currentUser;
+  // const user            = firebase.auth().currentUser; // same as above
 
   return(
     <nav className="navbar navbar-expand-lg navbar-dark">
@@ -17,7 +17,7 @@ const Nav = () => {
         <ul className="navbar-nav ml-auto">
           {currentUser && (
             <React.Fragment>
-              <li className="nav-item"><a className="nav-item nav-link" href="#">{user.email}</a></li>
+              <li className="nav-item"><a className="nav-item nav-link" href="#">{currentUser.email}</a></li>
               <li className="nav-item"><a className="nav-item nav-link" href="/logout">Logout</a></li>
             </React.Fragment>  
           )}

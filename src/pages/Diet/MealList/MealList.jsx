@@ -8,6 +8,7 @@ import check from 'check-types';
 import TextareaAutosize  from 'react-textarea-autosize';
 import SlideDown from '../../../components/SlideDown/SlideDown'
 import ReactHtmlParser from 'react-html-parser'; 
+
 const SortableItem = SortableElement(({meal, setMeals,meals}) => {
   const [slide, setSlide] = useState(false);
   const onSlide           = ()=>{setSlide(!slide)}

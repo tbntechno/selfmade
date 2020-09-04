@@ -2,9 +2,9 @@ import React, {useState,useEffect} from 'react';
 import './Diet.scss';
 import {db} from '../../services/firebase';
 import _ from 'lodash';
-import WeeklyDietPlan       from './WeeklyDietPlan/WeeklyDietPlan';
-import WeeklyDietPlanEditor from './WeeklyDietPlanEditor/WeeklyDietPlanEditor'
-import MealList             from './MealList/MealList';
+import WeeklyDietPlan           from './WeeklyDietPlan/WeeklyDietPlan';
+import WeeklyDietPlanEditor     from './WeeklyDietPlanEditor/WeeklyDietPlanEditor'
+import MealList                 from './MealList/MealList';
 
 const nutritionPlan = {
   planName: "first one",
@@ -81,47 +81,47 @@ const Diet = () => {
     db.collection('diet_meals').doc()
     .set({
       name: `${_.uniqueId()}`,
-      nutritionFacts: [ 
-        {name: 'Calories', value: -1}, 
-        {name: 'Protein', value: -1}, 
-        {name: 'Carbohydrates', value: -1},
-        {name: 'Fiber', value: -1}, 
-        {name: 'Sugars', value: -1}, 
-        {name: 'Fat', value: -1}, 
-        {name: 'Saturated', value: -1}, 
-        {name: 'Polyunsaturated', value: -1},
-        {name: 'Monounsaturated', value: -1}, 
-        {name: 'Trans', value: -1}, 
-        {name: 'Cholesterol', value: -1}, 
-        {name: 'Sodium', value: -1}, 
-        {name: 'Potassium', value: -1},
-        {name: 'Vitamin A', value: -1}, 
-        {name: 'Vitamin C', value: -1}, 
-        {name: 'Calcium', value: -1}, 
-        {name: 'Iron', value: -1}
-      ],
+      // nutritionFacts: [ 
+      //   {name: 'Calories', value: -1}, 
+      //   {name: 'Protein', value: -1}, 
+      //   {name: 'Carbohydrates', value: -1},
+      //   {name: 'Fiber', value: -1}, 
+      //   {name: 'Sugars', value: -1}, 
+      //   {name: 'Fat', value: -1}, 
+      //   {name: 'Saturated', value: -1}, 
+      //   {name: 'Polyunsaturated', value: -1},
+      //   {name: 'Monounsaturated', value: -1}, 
+      //   {name: 'Trans', value: -1}, 
+      //   {name: 'Cholesterol', value: -1}, 
+      //   {name: 'Sodium', value: -1}, 
+      //   {name: 'Potassium', value: -1},
+      //   {name: 'Vitamin A', value: -1}, 
+      //   {name: 'Vitamin C', value: -1}, 
+      //   {name: 'Calcium', value: -1}, 
+      //   {name: 'Iron', value: -1}
+      // ],
       order: meals.length
     });
   }
-  const [textarea, setTextarea] = useState("");
-  const textAreaConvertHandler = ()=>{
-    console.log(textarea);
-  }
+  // const [textarea, setTextarea] = useState("");
+  // const textAreaConvertHandler = ()=>{
+  //   console.log(textarea);
+  // }
   return (
     <div className="diet">
       <div className="container-fluid">
         <WeeklyDietPlan       meals={meals} dietPlan={dietPlan} DAYS_OF_WEEK={DAYS_OF_WEEK} setDietPlan={setDietPlan}/>
         <WeeklyDietPlanEditor meals={_.sortBy(meals,'order')} dietPlan={dietPlan} DAYS_OF_WEEK={DAYS_OF_WEEK}/>   
-        <MealList             meals={_.sortBy(meals,'order')} setMeals={setMeals}/>
+        {/* <MealList             meals={_.sortBy(meals,'order')} setMeals={setMeals}/> */}
         {/* <button onClick={newMealHandler}>New Meal</button> */}
         <button onClick={testHandler}>Test</button>
-        <button onClick={textAreaConvertHandler}>Text Area Converter</button>
-        <div className="row">
-          <div className="col-6" >
-            <textarea name="" id="" cols="30" rows="5" style={{width: "100%"}} onChange={e=>setTextarea(e.target.value.replace(/\r?\n/g, '<br/>'))}></textarea>
-          </div>
-          <div className="col-6">{textarea}</div>
-        </div>
+          {/* <button onClick={textAreaConvertHandler}>Text Area Converter</button>
+          <div className="row">
+            <div className="col-6" >
+              <textarea name="" id="" cols="30" rows="5" style={{width: "100%"}} onChange={e=>setTextarea(e.target.value.replace(/\r?\n/g, '<br/>'))}></textarea>
+            </div>
+            <div className="col-6">{textarea}</div>
+          </div> */}
       </div>
     </div>
   )
