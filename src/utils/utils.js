@@ -40,6 +40,13 @@ export const nutritionFactsCreate = (props = {
 	]
 }
 
+/** Taking Array of nutritionFacts and serving, then combine them together
+ * [
+ * 	0: {serving: 1, nutritionFacts: Array(17)}
+ * 	1: {serving: 1, nutritionFacts: Array(17)}
+ * ]
+ */
+
 export const nutritionFactsCombine = (nutritionFactsList) =>{
   var temp = nutritionFactsCreate();
 //   console.log(nutritionFactsList);

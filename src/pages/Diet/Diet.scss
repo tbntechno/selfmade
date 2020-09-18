@@ -23,21 +23,43 @@
   }
 }
 
+@media print{
+  @page {size: landscape}
+  @page {
+    margin: 0cm;
+  }
 
+  /* Hide every other element */
+  body * {
+    visibility: hidden;
+  }
+  /* Then displaying print container element*/
+  .print-container, .print-container * {
+    // background-color:red;
+    // font-size: 30px !important;
+    visibility: visible;
+    .weekly-table{
+      height: 91vh !important;
+      .day-name {
+      }
+      .day-data{
+        min-height: 260px !important;
+      }
+      .day-stats{ 
+        .day-stats-slide-button{
+          font-size: 12px !important;
+        }
+        .day-stats-table{
+          font-size: 10.5px !important;
+        }
+      }
+    }
+  }
 
-.Protein{
-  color: white;
-  background: #D05B54;
-}
-.Carbohydrates{
-  color: white;
-  background: #4E99C5;
-}
-.Fat{
-  color: white;
-  background:#00BC9C;
-}
-.Calories{
-  color: white;
-  background: #2B3E4F;
+  html, body {
+    height:100vh; 
+    margin: 0 !important; 
+    padding: 0 !important;
+    overflow: hidden;
+  }
 }

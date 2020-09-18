@@ -1,33 +1,28 @@
-import React, { useContext }    from "react";
-import firebase                 from "../../services/firebase";
-import { AuthContext }          from "../../services/auth";
+import React   from "react";
+import { AuthContext }          from "services/auth";
+import { Navbar, Nav as BSNav } from 'react-bootstrap';
+import { auth } 				      from 'services/firebase';
+
 import './Nav.scss';
 const Nav = () => {
-  const { currentUser } = useContext(AuthContext); // THIS is for update NAV bar React STATE!
-  // const user            = firebase.auth().currentUser; // same as above
+  const { currentUser } = auth; // THIS is for update NAV bar React STATE!
 
   return(
-    <nav className="navbar navbar-expand-lg navbar-dark">
-      <a className="navbar-brand" href="#">My Dictionary</a>
-      {/* <Link to="/"><img src={Logo} alt="logo" width='80px' /></Link> */}
-      <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon"></span>
-      </button>
-      <div  className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav ml-auto">
-          {currentUser && (
-            <React.Fragment>
-              <li className="nav-item"><a className="nav-item nav-link" href="#">{currentUser.email}</a></li>
-              <li className="nav-item"><a className="nav-item nav-link" href="/logout">Logout</a></li>
-            </React.Fragment>  
-          )}
-        </ul>
-        {/* <form className="form-inline my-2 my-lg-0">
-          <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"></input>
-          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form> */}
-      </div>
-    </nav>
+    <Navbar className="my-navbar" variant="dark">
+      <Navbar.Brand href="/diet">Diet Plan</Navbar.Brand>
+      <BSNav className="mr-auto">
+        <BSNav.Link href="#home">Home</BSNav.Link>
+        <BSNav.Link href="/meal">Meals</BSNav.Link>
+        <BSNav.Link href="/ingredient">Ingredients</BSNav.Link>
+      </BSNav>
+      {currentUser && (
+        <BSNav className="ml-auto">
+          <BSNav.Link href="#home">{currentUser.email}</BSNav.Link>
+          <BSNav.Link href="/logout">Logout</BSNav.Link>
+        </BSNav>
+      )}
+    </Navbar>
   )
 }
 export default Nav;
+

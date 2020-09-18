@@ -1,14 +1,34 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import './Diet.scss';
-import {db} from '../../services/firebase';
+import check  from 'check-types';
+import {auth, db} from 'services/firebase';
 import _ from 'lodash';
-import WeeklyDietPlan           from './WeeklyDietPlan/WeeklyDietPlan';
-import WeeklyDietPlanEditor     from './WeeklyDietPlanEditor/WeeklyDietPlanEditor'
-import MealList                 from './MealList/MealList';
+import WeeklyTable              from './WeeklyTable/WeeklyTable';
+import WeeklyTableControlPanel  from './WeeklyTableControlPanel/WeeklyTableControlPanel'
+import {nutritionFactsCombine} 	from 'utils/utils';
+import {Container} 					        	from 'react-bootstrap';
 
-const nutritionPlan = {
-  planName: "first one",
-  nutritionGoal: [
+const DAYS_OF_WEEK = [
+  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+]
+
+const builtInPlan =(userID) => {
+  return {
+    planName: "Trung Nguyen",
+    data: {
+      0: ["3LE6JDanEpjivreIKKPC","5ZiOeBvCo0gcdeUGvig6","VEFgyzrl6HCp3JI7Ab6t","WZ6OIKAXAzATntVydhmX"],
+      1: ["WZ6OIKAXAzATntVydhmX"],
+      2: ["3LE6JDanEpjivreIKKPC"],
+      3: ["5ZiOeBvCo0gcdeUGvig6"],
+      4: ["VEFgyzrl6HCp3JI7Ab6t"],
+      5: ["WZ6OIKAXAzATntVydhmX","5ZiOeBvCo0gcdeUGvig6"],
+      6: ["WZ6OIKAXAzATntVydhmX"]
+    },
+    userID:userID
+  }
+}
+const builtInGoal =() => {
+  return [
     {name: "Calories", value:2680}, 
     {name: "Protein", value:201}, 
     {name: "Carbohydrates", value:268}, 
@@ -26,104 +46,150 @@ const nutritionPlan = {
     {name: "Vitamin C", value:100}, 
     {name: "Calcium", value:100}, 
     {name: "Iron", value:100}
-  ],
-  data: {
-    0: ["hmwQycj3fEoLkTQh4VaE","mzHhzivZe20ZuZtmce1h"],
-    1: ["mzHhzivZe20ZuZtmce1h"],
-    2: ["mzHhzivZe20ZuZtmce1h"],
-    3: ["mzHhzivZe20ZuZtmce1h"],
-    4: ["mzHhzivZe20ZuZtmce1h"],
-    5: ["mzHhzivZe20ZuZtmce1h"],
-    6: ["mzHhzivZe20ZuZtmce1h"]
-  }
+  ]
 }
-const DEFAULT_PLAN = "first one";
-const DAYS_OF_WEEK = [
-  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-]
+
+const DEFAULT_PLAN_ID = "EYwYQW2os0Tp7qqqrNEt";
+
+export const DietContext = React.createContext();
 const Diet = () => {
-  const [meals, setMeals] = useState([]);
-  const [dietPlans, setDietPlans]  = useState([]);
-  const [dietPlan,  setDietPlan]   = useState({});
+  const [dietPlan,  setDietPlan]  = useState({});
+  const [dietMeals, setDietMeals] = useState([]);
+  const [dietIngredients,  setDietIngredients]   = useState([]);
+  const [mappedDietPlanData, setMappedDietPlanData] = useState([]);
 
   useEffect(()=>{
-    // Get Meal!
-    const unsubMeals = db.collection('diet_meals')
-    .onSnapshot((snapshot)=>{
-      const meals = snapshot.docs.map((doc)=> ({ id:doc.id, ...doc.data() }) );
-      // meals = _.sortBy(meals, 'order')  //
-      // console.log(meals);
-      setMeals(meals || []);
-    })
-    
-    // Get Diet Selected Plan & ALL Plans
-    const unsubDiet = db.collection('diet')
-    .onSnapshot((snapshot)=>{
-      const dietPlans = snapshot.docs.map((doc)=> ({ id: doc.id, ...doc.data() }) );
-      setDietPlans(dietPlans || []);
-      // console.log(dietPlans);
-      // Get Default Plan
-      const defaultPlan =  _.find(dietPlans, {'planName': DEFAULT_PLAN});
-      setDietPlan(defaultPlan || {});
-      // console.log(defaultPlan);
-    })
+    // Get Current Diet Plan
+    const unsubDiet = db.collection('diet_plans').doc(DEFAULT_PLAN_ID)
+      .onSnapshot((doc)=>{
+        const plan = { id: doc.id, ...doc.data() };
+        // console.log(plan);
+        setDietPlan(plan);
+      })
+
+    // Get Meals
+    var unsubMeals;
+    if( check.emptyArray(dietMeals) ){
+      unsubMeals = db.collection('diet_meals').where("userID", "==", auth.currentUser.uid)
+      .onSnapshot((snapshot)=>{
+        const meals = snapshot.docs.map((doc)=> ({ mealID:doc.id, ...doc.data() }) );
+        // console.log(meals);
+        setDietMeals(meals);
+      })
+    }
+
+    // Get Ingredients
+    var unsubIngredients;
+    if( check.emptyArray(dietIngredients) ){
+      unsubIngredients = db.collection('diet_ingredients')
+      .onSnapshot((snapshot)=>{
+        const ingredients = snapshot.docs.map((doc)=> ({ ingredientID:doc.id, ...doc.data() }) );
+        // console.log(ingredients);
+        setDietIngredients(ingredients);
+      })
+    }
     return () => {
       unsubMeals();
       unsubDiet();
+      unsubIngredients();
     }
   },[]);
+  
+  useEffect(()=>{
+    /************************
+      - dietIngredients: [{
+          id: "OsddcqItZ8SuXD01IV3o"
+          name: "olllkm"
+          nutritionFacts: (17) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+          unit: "tbsp"
+        }
+      ]
 
-  const testHandler = () => {
-    // db.collection('diet').doc('iWWpcGyovKHF3L7KAtJI')
-    // .set(nutritionPlan);
+      - dietMeals:[{
+          id: "3LE6JDanEpjivreIKKPC"
+          ingredients: Array(2)
+            0: {ingredientID: "OsddcqItZ8SuXD01IV3o", serving: 1}
+            1: {ingredientID: "iKqGMLGHTPZIp9PK8TIc", serving: 1}
+          length: 2
+          instruction: "not Obsences anymre<br/><br/>awe<br/>aw<br/>e"
+          name: "Meal 1"
+          userID: "6c0eYGjSayY9G2YHP8ejQhSB2Th1"
+        }
+      ]
+      
+       * MAP the mapped Meals to the 7-day Plan data
+      - dietPlan {
+        data:
+          0: (4) ["3LE6JDanEpjivreIKKPC", "5ZiOeBvCo0gcdeUGvig6", "VEFgyzrl6HCp3JI7Ab6t", "WZ6OIKAXAzATntVydhmX"]
+          1: ["WZ6OIKAXAzATntVydhmX"]
+          2: ["3LE6JDanEpjivreIKKPC"]
+          3: ["5ZiOeBvCo0gcdeUGvig6"]
+          4: ["VEFgyzrl6HCp3JI7Ab6t"]
+          5: (2) ["WZ6OIKAXAzATntVydhmX", "5ZiOeBvCo0gcdeUGvig6"]
+          6: ["WZ6OIKAXAzATntVydhmX"]
+        __proto__: Object
+        id: "EYwYQW2os0Tp7qqqrNEt"
+        planName: "Trung Nguyen"
+        userID: "6c0eYGjSayY9G2YHP8ejQhSB2Th1"
+    }
+    ************************/
+    if( !check.emptyArray(dietIngredients) && !check.emptyArray(dietMeals) && !check.emptyObject(dietPlan) ){
+      // Mapping Ingredients into Meals => {mappedDietMeals}
+      var mappedDietMeals = dietMeals.map((meal, index)=>{
+        var nutritionFactsList = []
+        var ingredients = meal.ingredients.map((ingredient,index) =>{
+          // Get ingredient data from {dietIngredients} + Serving
+          var found = {...dietIngredients.find(ingredientData => ingredientData.ingredientID === ingredient.ingredientID), serving: ingredient.serving} 
+          // Accumulate to calculate total meal nutritionFacts
+          nutritionFactsList.push({nutritionFacts: found.nutritionFacts, serving: found.serving})
+          return found;
+        })
+        meal['ingredients'] = ingredients
+        meal['mealNutritionFacts'] = nutritionFactsCombine(nutritionFactsList)
+        return meal
+      })
+      // Maping {mappedDietMeals} into DietPlan
+      var mappedDietPlan = DAYS_OF_WEEK.map((dayName, i)=>{
+        var nutritionFactsList = []
+        var mealData = dietPlan.data[i].map((mealID, i) => {
+          var found =  mappedDietMeals.find(mealData => mealData.mealID == mealID)
+          nutritionFactsList.push({nutritionFacts: found.mealNutritionFacts, serving: 1})           // Accumulate to calculate total day nutritionFacts
+          return found
+        })
+        return { 
+          mealData: mealData,
+          dayName: dayName,
+          dayNutritionFacts: nutritionFactsCombine(nutritionFactsList),
+          nutritionGoal: builtInGoal()
+        }
+      })
+      setMappedDietPlanData(mappedDietPlan);
+    }
+  },[dietIngredients, dietMeals, dietPlan]);
+
+  const testPlan = () => {
+    db.collection('diet_plans').doc()
+    .set(builtInPlan(auth.currentUser.uid));
   }
-  const EW = () => {
-    db.collection('diet_meals').doc()
-    .set({
-      name: `${_.uniqueId()}`,
-      // nutritionFacts: [ 
-      //   {name: 'Calories', value: -1}, 
-      //   {name: 'Protein', value: -1}, 
-      //   {name: 'Carbohydrates', value: -1},
-      //   {name: 'Fiber', value: -1}, 
-      //   {name: 'Sugars', value: -1}, 
-      //   {name: 'Fat', value: -1}, 
-      //   {name: 'Saturated', value: -1}, 
-      //   {name: 'Polyunsaturated', value: -1},
-      //   {name: 'Monounsaturated', value: -1}, 
-      //   {name: 'Trans', value: -1}, 
-      //   {name: 'Cholesterol', value: -1}, 
-      //   {name: 'Sodium', value: -1}, 
-      //   {name: 'Potassium', value: -1},
-      //   {name: 'Vitamin A', value: -1}, 
-      //   {name: 'Vitamin C', value: -1}, 
-      //   {name: 'Calcium', value: -1}, 
-      //   {name: 'Iron', value: -1}
-      // ],
-      order: meals.length
-    });
-  }
-  // const [textarea, setTextarea] = useState("");
-  // const textAreaConvertHandler = ()=>{
-  //   console.log(textarea);
-  // }
   return (
-    <div className="diet">
-      <div className="container-fluid">
-        <WeeklyDietPlan       meals={meals} dietPlan={dietPlan} DAYS_OF_WEEK={DAYS_OF_WEEK} setDietPlan={setDietPlan}/>
-        <WeeklyDietPlanEditor meals={_.sortBy(meals,'order')} dietPlan={dietPlan} DAYS_OF_WEEK={DAYS_OF_WEEK}/>   
-        {/* <MealList             meals={_.sortBy(meals,'order')} setMeals={setMeals}/> */}
-        {/* <button onClick={newMealHandler}>New Meal</button> */}
-        <button onClick={testHandler}>Test</button>
-          {/* <button onClick={textAreaConvertHandler}>Text Area Converter</button>
-          <div className="row">
-            <div className="col-6" >
-              <textarea name="" id="" cols="30" rows="5" style={{width: "100%"}} onChange={e=>setTextarea(e.target.value.replace(/\r?\n/g, '<br/>'))}></textarea>
-            </div>
-            <div className="col-6">{textarea}</div>
-          </div> */}
+    <DietContext.Provider value={{mappedDietPlanData, setMappedDietPlanData, dietMeals, setDietMeals, dietPlan}}>
+      <div className="diet">
+        <Container fluid>
+          {(check.emptyArray(mappedDietPlanData)) ? null : 
+            <React.Fragment>
+              <div style={{display:"flex", justifyContent: "flex-end", margin: "5px"}}>
+                <button onClick={()=>window.print()}>Print</button>
+              </div>
+              <div className="print-container">
+                <WeeklyTable/>
+              </div>
+              <WeeklyTableControlPanel/>   
+            </React.Fragment>
+          }
+          {/* <button onClick={testPlan}>Create Test Plan</button> */}
+        </Container>
       </div>
-    </div>
+    </DietContext.Provider>
   )
 }
 export default Diet;

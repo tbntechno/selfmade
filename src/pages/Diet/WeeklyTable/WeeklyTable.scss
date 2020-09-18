@@ -1,4 +1,4 @@
-.dragging-helper-class .main-stats, .main-stats{
+.dragging-helper-class .meal-main-stats, .meal-main-stats{
   font-size: 11px;
   text-align: center;
   .meal-name{
@@ -12,46 +12,35 @@
   }
 }
 
-.daysofweek{
+.weekly-table{
   border: 1px solid black;
   padding: 5px;
   margin: 5px;
-  .mcol{
+  .weekly-table-column{
     &:not(:last-child){
       border-right: 1px solid black;
     }
-    // border-left: 1px solid black;
-    .day-title {
+    .day-name {
       text-align: center;
       text-decoration: underline;
       margin:10px;
     }
-    .day-meal-list{
+    .day-data{
+      margin: 1px;
       min-height: 300px;
-      // .day-meal {
-      //   // merge to Global draggable css
-      //   // .main-stats{
-      //   //   font-size: 11px;
-      //   //   text-align: center;
-      //   //   .meal-name{
-            
-      //   //     text-align: left;
-      //   //     padding-left:5px;
-      //   //   }
-      //   // }
-      // }
     }
-    .meal-stat{ 
-      margin-top: 24px;
-      .slide-button{
+    .day-stats{ 
+      .day-stats-slide-button{
+        margin: 0 1px;
         font-size: 12px;
         background:#C3C3C3;
         color:white;
         width:100%;
         text-align: center;
       }
-
-      .stat-table{
+      .day-stats-table{
+        margin: 0 1px;
+        width: 100%;
         background-color: #ECF0F1;
         font-size:12px;
       }
@@ -59,3 +48,19 @@
   }
 }
 
+.Protein{
+  color: white;
+  background: #D05B54;
+}
+.Carbohydrates{
+  color: white;
+  background: #4E99C5;
+}
+.Fat{
+  color: white;
+  background:#00BC9C;
+}
+.Calories{
+  color: white;
+  background: #2B3E4F;
+}

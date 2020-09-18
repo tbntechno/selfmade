@@ -1,0 +1,21 @@
+.weekly-table-control-panel{
+  border: 1px solid grey;
+  margin: 5px;
+  padding: 5px;
+  .form-control{
+    margin: 5px;
+  }
+  .day-select, .meal-select{
+    padding-left: 10px;
+    padding-right: 10px !important;
+    background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat;
+    position: relative;
+    background-size: 11px;
+    -webkit-appearance: none;
+    background-position: right 12px top 13px; /* Change the px value here to change the distance */
+  }
+  button{
+    margin: 5px;
+  }
+}
+

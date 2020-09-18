@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.css';
-// import 'bootstrap/dist/js/bootstrap.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // React-Toastify
 import 'react-toastify/dist/ReactToastify.css'

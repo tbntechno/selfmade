@@ -1,10 +1,9 @@
 import React, {useState,useEffect} from 'react';
-import {db} from '../../services/firebase';
-import clone from 'clone-deep';
+import {db} from 'services/firebase';
 import './DietIngredient.scss';
 import check from 'check-types';
-import { map } from 'lodash';
 import {nutritionFactsCreate, random} 	from 'utils/utils';
+import {Container, Row, Col} 					          from 'react-bootstrap';
 
 const UNITS = ["gram", "tsp", "tbsp", "milliliter"];
 
@@ -38,9 +37,9 @@ const DietIngredient = () => {
   }
 
   return (
-    <div className="container-fluid">
+    <Container style={{marginTop: "20px"}} fluid>
       <h3>Ingredient List</h3>
-      <input type="search" value={searchText} placeholder= "Search here..." style={{ fontSize: 20, width: "100%" }} onChange={(e)=>searchHandler(e)} />
+      <input value={searchText} placeholder= "Search here..." style={{ fontSize: 17, width: "100%", margin:"8px 0" }} onChange={(e)=>searchHandler(e)} />
       <div className="ingredient-list">
         <ul style={{padding:"0px"}}>
           {ingredientsDisplay && ingredientsDisplay.map((ingredient, index) => {
@@ -49,7 +48,7 @@ const DietIngredient = () => {
         </ul>
       </div>
       <IngredientCreate/>
-    </div>
+    </Container>
   )
 }
 export default DietIngredient;
@@ -61,16 +60,16 @@ const Ingredient = ({ingredient}) => {
     const confirmed = window.confirm("You really want to delete this ingredient?");
     if(confirmed){ db.collection('diet_ingredients').doc(rmID).delete()}
   }
-  return <li className="row ingredient">
-    <div className="col-2" >{ingredient.name}</div>
-    <div className="col-8">{ 
+  return <Row className="ingredient">
+    <Col xs={2} >{ingredient.name}</Col>
+    <Col xs={8}>{ 
       (ingredient.nutritionFacts) && ingredient.nutritionFacts.map((nutrient, i)=>{
         return <label key={i} className={`${nutrient.name} ingredient-fact`}>{nutrient.name}:{nutrient.value}</label>
       })}
-    </div>
-    <div className="col-1" style={{marginTop: "10px"}}>{ingredient.unit}</div>
-    <div className="col-1"><button className="ingredient-delete btn btn-secondary" onClick={()=>removeIngredientHandler(ingredient.id)}>x</button></div>
-  </li>
+    </Col>
+    <Col xs={1} style={{marginTop: "10px"}}>{ingredient.unit}</Col>
+    <Col xs={1} className="d-flex justify-content-end align-items-center"><button className="ingredient-delete btn btn-secondary" style={{height:"50px"}} onClick={()=>removeIngredientHandler(ingredient.id)}>x</button></Col>
+  </Row>
 }
 
 const IngredientCreate = () => {

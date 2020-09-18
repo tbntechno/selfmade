@@ -42,7 +42,7 @@ const DietMeal = () => {
 
   return (
 		<MealContext.Provider value={{ingredientList: ingredients}} >
-			<Container fluid>
+			<Container style={{marginTop: "20px"}} fluid>
 				{meals.map((meal,i)=><Meal meal={meal} key={i} setEditMealForm={setEditMealForm}/>)}
 				<Button size="sm" svarient="secondary" onClick={()=>setShowCreateMealForm(true)}>Create Meal</Button>
 			</Container>
@@ -53,14 +53,3 @@ const DietMeal = () => {
   )
 }
 export default DietMeal;
-
-
-const makeid = (length) => {
-  var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for ( var i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}

@@ -44,7 +44,7 @@ const DietMealEditForm = ({ingredients, editMealForm, setEditMealForm}) => {
       var temp = meal.ingredients.map((ingredient, i)=>{
 				var data = {};
 				for (let i = 0; i < ingredientList.length; i++) {
-					if( ingredientList[i].id ==  ingredient.ingredientID ){
+					if( ingredientList[i].id ===  ingredient.ingredientID ){
             data['id']              = ingredient.ingredientID;
             data['name']            = ingredientList[i].name;
             data['label']           = ingredientList[i].name;
