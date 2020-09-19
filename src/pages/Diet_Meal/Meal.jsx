@@ -23,6 +23,7 @@ const Meal  = ({meal, setEditMealForm})=>{
 	const [mealNutritionFacts, setMealNutritionFacts]	= useState([]);
 
 	useEffect(()=>{
+		console.log(meal)
 		if(!check.maybe(ingredientList) || !check.emptyArray(ingredientList) ){
 			/* MAP DATA SO WE CAN DISPLAY TOTAL NUTRITIONFACTS
 				meal{
@@ -51,7 +52,7 @@ const Meal  = ({meal, setEditMealForm})=>{
 		<Col xs={12} md={2}>
 			<div style={{minWidth:"214px"}}>
 				{meal.name}
-				<button style={{marginLeft:"5px"}} onClick={()=>setEditMealForm([true, meal])}><FaEdit/></button>
+				<button type="button" class="btn btn-sm btn-outline-dark" style={{marginLeft:"5px"}} onClick={()=>setEditMealForm([true, meal])}><FaEdit/></button>
 			</div>
 		</Col>
 		<Col xs={12} xs={10}>
@@ -60,18 +61,17 @@ const Meal  = ({meal, setEditMealForm})=>{
 			<div className="meal-border" /*style={{border:"1px red solid"}}*/ >
 				<ul>{meal.ingredients.map((ingredient, i)=><MealIngredient meal={meal} ingredient={ingredient} key={i}/>)}</ul>
 			</div>
-			{/********************* Instruction *********************/}
-			<div onClick={()=>setSlideInstruction(!slideInstruction)} style={{width: "100%", fontSize: "12px", backgroundColor: "#E0E0E0git ", textAlign: "center", outline: "0 !important", lineHeight: "none", height: "20px",}}>
-				Instruction
-			</div>
-			<SlideDown onSlide={slideInstruction}>
-				<div style={{backgroundColor:"#E8E8E8", padding: "10px"}}>{ReactHtmlParser(meal.instruction)}</div>
-			</SlideDown>
 			{/********************* TotalNutritionFacts *********************/}
 			<div style={{backgroundColor:"#E8E8E8"}}>
 				<NutritionFacts nutritionFacts={nutritionFactsCombine(mealNutritionFacts)} size={16} spacing={5}/>
 			</div>
-			
+			{/********************* Instruction *********************/}
+			<button onClick={()=>setSlideInstruction(!slideInstruction)} style={{width: "100%", fontSize: "12px", backgroundColor: "#E0E0E0git ", textAlign: "center", outline: "0 !important", lineHeight: "none", height: "20px",}}>
+				Instruction
+			</button>
+			<SlideDown onSlide={slideInstruction}>
+				<div style={{backgroundColor:"#E8E8E8", padding: "10px"}}>{ReactHtmlParser(meal.instruction)}</div>
+			</SlideDown>
 		</Col>
 	</Row>
 }

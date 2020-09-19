@@ -189,9 +189,9 @@ const IngredientCreate = () => {
     </div>
     <div><button onClick={createIngredientHandler} className="btn btn-primary btn-sm">Add Ingredient</button></div>
     <br/>
-    <div><button onClick={test_add_ingredients} className="btn btn-secondary btn-sm">Add Test Ingredient</button></div>
+    {/* <div><button onClick={test_add_ingredients} className="btn btn-secondary btn-sm">Add Test Ingredient</button></div>
     <br/>
-    <div><button onClick={test} className="btn btn-warning btn-sm">test</button></div>
+    <div><button onClick={test} className="btn btn-warning btn-sm">test</button></div> */}
   </div>
 }
 

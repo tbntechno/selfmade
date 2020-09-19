@@ -69,6 +69,7 @@ const DietMealEditForm = ({ingredients, editMealForm, setEditMealForm}) => {
   },[ingredients, editMealForm]);
   
   const handleSave = () =>{
+    console.log(selectedIngredientList)
     if( window.confirm("You are sure you want to save?") ){
       const meal = {
         name: mealName,
@@ -98,7 +99,7 @@ const DietMealEditForm = ({ingredients, editMealForm, setEditMealForm}) => {
 							</Col>
 							<Col xs={12} style={{padding:"10px 15px"}}>
 									{ingredientList && 
-                    <Select onChange={(l)=>setSelectedIngredientList(l)} options={ingredientList} value={selectedIngredientList} isClearable={true} placeholder="Select Ingredients" isMulti/>
+                    <Select onChange={(l)=>(check.null(l) ? [] : setSelectedIngredientList(l))} options={ingredientList} value={selectedIngredientList} isClearable={true} placeholder="Select Ingredients" isMulti/>
                   }
 							</Col>
 						</Row>
