@@ -24,7 +24,7 @@ const WeeklyTableControlPanel = () => {
     if (check.emptyString(seletedMealAddMeal) || check.null(seletedMealAddMeal)){
       alert("Meal has not selected"); return;
     }
-    console.log(seletedDayAddMeal, seletedMealAddMeal)
+    // console.log(seletedDayAddMeal, seletedMealAddMeal)
     if( window.confirm("Are you sure you want to add this meal?") ){
       let temp = clone(dietPlan);
       temp.data[seletedDayAddMeal].push(seletedMealAddMeal);
@@ -36,7 +36,7 @@ const WeeklyTableControlPanel = () => {
 
   // Remove Meal Handler
   const removeMealHandler = () =>{
-    console.log(selectedDayRemoveMeal, selectedMealRemoveMeal);
+    // console.log(selectedDayRemoveMeal, selectedMealRemoveMeal);
     if( check.emptyArray( dietPlan.data[selectedDayRemoveMeal] )){
       alert("There is no meals to remove in this day"); return;
     }

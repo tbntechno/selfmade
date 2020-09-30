@@ -3,14 +3,15 @@ import {db, auth} 								              from 'services/firebase';
 import {Container, Row, Col} 					          from 'react-bootstrap';
 import {Button} 					                      from 'react-bootstrap';
 import {ToastContainer}                         from 'react-toastify';
+import check 					                          from 'check-types';
 
 // Components
-import Meal                                     from './Meal';
-import DietMealCreateForm                       from './DietMealCreateForm';
-import DietMealEditForm                         from './DietMealEditForm';
+import MealItem                                 from './MealItem';
+import FormCreateMeal                           from './FormCreateMeal';
+import FormEditMeal                             from './FormEditMeal';
 
 export const MealContext = React.createContext();
-const DietMeal = () => {
+const Meal = () => {
   const [meals, setMeals]                           = useState([]);
   const [ingredients, setIngredients]               = useState([]);
   const [showCreateMealForm, setShowCreateMealForm] = useState(false);
@@ -20,8 +21,9 @@ const DietMeal = () => {
     const unsubMeals = db.collection('diet_meals').where("userID", "==", auth.currentUser.uid)
     .onSnapshot((snapshot)=>{
       const meals = snapshot.docs.map((doc)=> { 
-        let {userID, ...noUserID} = {id:doc.id, ...doc.data()}
-        return noUserID;
+        return {id:doc.id, ...doc.data()};
+        // let {userID, ...noUserID} = {id:doc.id, ...doc.data()}
+        // return noUserID;
       });
       // console.log(meals);
       setMeals(meals || []);
@@ -41,15 +43,20 @@ const DietMeal = () => {
 
 
   return (
-		<MealContext.Provider value={{ingredientList: ingredients}} >
-			<Container style={{marginTop: "20px"}} fluid>
-				{meals.map((meal,i)=><Meal meal={meal} key={i} setEditMealForm={setEditMealForm}/>)}
-				<Button size="sm" svarient="secondary" onClick={()=>setShowCreateMealForm(true)}>Create Meal</Button>
-			</Container>
-			<DietMealCreateForm ingredients={ingredients} showCreateMealForm={showCreateMealForm} setShowCreateMealForm={setShowCreateMealForm}/>
-      <DietMealEditForm   ingredients={ingredients} editMealForm={editMealForm} setEditMealForm={setEditMealForm}/>
+		<MealContext.Provider value={{dbIngredients: ingredients}} >
+      <Container style={{marginTop: "20px"}} fluid>
+        {(check.emptyArray(ingredients)) ? 
+          <div>There is no Ingredients</div> : 
+          <>
+            {meals.map((meal,i)=><MealItem meal={meal} key={i} setEditMealForm={setEditMealForm}/>)}
+            <Button size="sm" svarient="secondary" onClick={()=>setShowCreateMealForm(true)}>Create Meal</Button>
+          </>
+        }
+      </Container>
+			<FormCreateMeal ingredients={ingredients} showCreateMealForm={showCreateMealForm} setShowCreateMealForm={setShowCreateMealForm}/>
+      <FormEditMeal   ingredients={ingredients} editMealForm={editMealForm} setEditMealForm={setEditMealForm}/>
       <ToastContainer/>
 		</MealContext.Provider>
   )
 }
-export default DietMeal;
+export default Meal;

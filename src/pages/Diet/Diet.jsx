@@ -6,7 +6,8 @@ import _ from 'lodash';
 import WeeklyTable              from './WeeklyTable/WeeklyTable';
 import WeeklyTableControlPanel  from './WeeklyTableControlPanel/WeeklyTableControlPanel'
 import {nutritionFactsCombine} 	from 'utils/utils';
-import {Container} 					        	from 'react-bootstrap';
+import {Container} 					    from 'react-bootstrap';
+import {ToastContainer, toast}  from 'react-toastify';
 
 const DAYS_OF_WEEK = [
   "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
@@ -138,6 +139,7 @@ const Diet = () => {
       var mappedDietMeals = dietMeals.map((meal, index)=>{
         var nutritionFactsList = []
         var ingredients = meal.ingredients.map((ingredient,index) =>{
+          // ERROR: un-updated deleted ingredients => can't find => return undefined => error
           // Get ingredient data from {dietIngredients} + Serving
           var found = {...dietIngredients.find(ingredientData => ingredientData.ingredientID === ingredient.ingredientID), serving: ingredient.serving} 
           // Accumulate to calculate total meal nutritionFacts
@@ -151,11 +153,14 @@ const Diet = () => {
       // Maping {mappedDietMeals} into DietPlan
       var mappedDietPlan = DAYS_OF_WEEK.map((dayName, i)=>{
         var nutritionFactsList = []
-        var mealData = dietPlan.data[i].map((mealID, i) => {
+        var mealData = dietPlan.data[i].map((mealID) => {
           var found =  mappedDietMeals.find(mealData => mealData.mealID == mealID)
-          nutritionFactsList.push({nutritionFacts: found.mealNutritionFacts, serving: 1})           // Accumulate to calculate total day nutritionFacts
+          // 1. Accumulate to calculate total day nutritionFacts
+            found && nutritionFactsList.push({nutritionFacts: found.mealNutritionFacts, serving: 1})  
+          // 2. ERROR: un-updated deleted meal => can't find => return undefined => error
+            check.undefined(found) && dbMealCleanUp(mealID, i)                                        
           return found
-        })
+        }).filter(mealID => mealID)   // Removing Inexisting meal (UI)
         return { 
           mealData: mealData,
           dayName: dayName,
@@ -166,6 +171,18 @@ const Diet = () => {
       setMappedDietPlanData(mappedDietPlan);
     }
   },[dietIngredients, dietMeals, dietPlan]);
+
+  const dbMealCleanUp = (mealID, index) =>{
+    toast.error("One of the Meals doesn't exist anymore! Processing to remove the Meal!", {autoClose: 7000, toastId: "no-duplicate"})
+    const {id, ...cleanPlanData} = dietPlan
+    cleanPlanData.data[index] = cleanPlanData.data[index].filter(id=> id !== mealID)
+    db.collection('diet_plans').doc(id).set(cleanPlanData)
+      .then(()=>console.log("Removed Non-Existing Meal!"))
+      .catch((error) => {
+        alert("Unexpected Error");
+        console.log("Unexpected Error", error);
+      })
+  }
 
   const testPlan = () => {
     db.collection('diet_plans').doc()
@@ -189,6 +206,7 @@ const Diet = () => {
           {/* <button onClick={testPlan}>Create Test Plan</button> */}
         </Container>
       </div>
+      <ToastContainer/>
     </DietContext.Provider>
   )
 }

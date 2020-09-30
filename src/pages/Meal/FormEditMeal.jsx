@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import check 									                  from 'check-types';
 import clone 									                  from 'clone-deep';
 
@@ -9,31 +9,68 @@ import {db, auth} 								              from 'services/firebase';
 
 import {Button, Modal} 						            	from 'react-bootstrap';
 import {Container, Row, Col} 					        	from 'react-bootstrap';
-import {FaEdit} 								              	from 'react-icons/fa';
 
 
-const DietMealCreateForm = ({ingredients, showCreateMealForm,setShowCreateMealForm, }) => {
+const FormEditMeal = ({ingredients, editMealForm, setEditMealForm}) => {
+  const [mealID, setMealID]                                 = useState("");
 	const [mealName, setMealName]                             = useState("");
   const [mealInstruction, setMealInstruction]               = useState("");
   
   const [selectedIngredientList, setSelectedIngredientList] = useState([]); // Selected Ingredients
   const [ingredientList, setIngredientList]                 = useState([]); // Mapped Ingredients (ingredients props) to used in <Select>
+  
   const handleClose = () => {
-		setShowCreateMealForm(false)
-	}
+		setEditMealForm([false, {}])
+  }
+  const handleRemove = () => {
+    if(window.confirm("Do you really want to remove this meal?")){
+			db.collection("diet_meals").doc(mealID).delete().then(()=>{
+        handleClose();
+			}).catch(function(error) {
+				alert("Unexpected Error");
+				console.log("Unexpected Error", error);
+			});
+		}
+  }
 
 	useEffect(()=>{
+    // Init MEAL 
+    if(!check.emptyObject(editMealForm[1])){
+      var meal = editMealForm[1];
+      setMealID(meal.id);
+      setMealName(meal.name);
+      setMealInstruction(meal.instruction);
+
+      var temp = meal.ingredients.map((ingredient, i)=>{
+				var data = {};
+				for (let i = 0; i < ingredientList.length; i++) {
+					if( ingredientList[i].id ===  ingredient.ingredientID ){
+            data['id']              = ingredient.ingredientID;
+            data['name']            = ingredientList[i].name;
+            data['label']           = ingredientList[i].name;
+            data['value']           = ingredient.ingredientID;
+						data['serving'] 	      = ingredient.serving;
+						data['nutritionFacts']  = ingredientList[i].nutritionFacts;
+						break;
+					}
+				} return data;
+      })
+      setSelectedIngredientList(temp);
+    }
+
     if(!check.emptyArray(ingredients)){
       setIngredientList(ingredients.map((ingredient)=>{
-          ingredient['label'] = ingredient.name;
-          ingredient['value'] = ingredient.id; 
-          ingredient['serving'] = 1;  
-          return ingredient;
+        var temp = clone(ingredient)
+				temp['label'] = ingredient.name;
+        temp['value'] = ingredient.id; 
+        temp['serving'] = 1;  
+				return temp;
       }));
     }
-  },[ingredients]);
+  },[ingredients, editMealForm]);
   
   const handleSave = () =>{
+    console.log(selectedIngredientList)
     if( window.confirm("You are sure you want to save?") ){
       const meal = {
         name: mealName,
@@ -41,10 +78,7 @@ const DietMealCreateForm = ({ingredients, showCreateMealForm,setShowCreateMealFo
         instruction: mealInstruction.replace(/\r?\n/g, '<br/>'),
         userID: auth.currentUser.uid,
       }
-      db.collection('diet_meals').doc().set(meal).then(()=>{
-        setMealName("");
-        setMealInstruction("");
-        setSelectedIngredientList([]);
+      db.collection('diet_meals').doc(mealID).set(meal).then(()=>{
         handleClose();
       }).catch(function(error) {
 				alert("Unexpected Error");
@@ -54,9 +88,9 @@ const DietMealCreateForm = ({ingredients, showCreateMealForm,setShowCreateMealFo
   }
   
   return (<>
-      <Modal show={showCreateMealForm} onHide={handleClose} backdrop="static" keyboard={false} animation={false} size="lg" centered>
+      <Modal show={editMealForm[0]} onHide={handleClose} backdrop="static" keyboard={false} animation={false} size="lg" centered>
         <Modal.Header closeButton>
-          <Modal.Title>Create Meal</Modal.Title>
+          <Modal.Title>Edit Meal</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 					<Container>
@@ -66,7 +100,7 @@ const DietMealCreateForm = ({ingredients, showCreateMealForm,setShowCreateMealFo
 							</Col>
 							<Col xs={12} style={{padding:"10px 15px"}}>
 									{ingredientList && 
-                    <Select onChange={(l)=>setSelectedIngredientList(l)} options={ingredientList} value={selectedIngredientList} isClearable={true} placeholder="Select Ingredients" isMulti/>
+                    <Select onChange={(l)=>(check.null(l) ? [] : setSelectedIngredientList(l))} options={ingredientList} value={selectedIngredientList} isClearable={true} placeholder="Select Ingredients" isMulti/>
                   }
 							</Col>
 						</Row>
@@ -76,7 +110,7 @@ const DietMealCreateForm = ({ingredients, showCreateMealForm,setShowCreateMealFo
               }
 						</ol>
 						<div>
-							<textarea placeholder="Instruction" style={{width:"100%"}} rows="5" onChange={(e)=>setMealInstruction(e.target.value)}></textarea>
+							<textarea placeholder="Instruction" style={{width:"100%"}} rows="5" value={mealInstruction.replace(/<br\s*\/?>/mg,"\n")} onChange={(e)=>setMealInstruction(e.target.value)}/>
 						</div>
             <div>
 							<NutritionFacts nutritionFacts={nutritionFactsCombine(selectedIngredientList)}/>
@@ -84,6 +118,9 @@ const DietMealCreateForm = ({ingredients, showCreateMealForm,setShowCreateMealFo
 					</Container>
         </Modal.Body>
         <Modal.Footer>
+          <Button variant="danger" onClick={handleRemove}>
+            Remove
+          </Button>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
@@ -93,17 +130,20 @@ const DietMealCreateForm = ({ingredients, showCreateMealForm,setShowCreateMealFo
     </>
   );
 }
-export default DietMealCreateForm;
+export default FormEditMeal;
 
 const Ingredient = ({ingredient, index, setSelectedIngredientList, selectedIngredientList}) => {
   const [serving, setServing] = useState(1);
+  useEffect(()=>{
+    setServing(selectedIngredientList[index].serving)
+  },[selectedIngredientList])
 
   const handleServingOnChange = ({target:{value}})=> {
     if(isNaN(value)) {
       setServing("");
     } else {
       // Update UI
-      setServing(Number(value));
+      // setServing(Number(value)); // No Need cuz the useEffect already done it
 
       // Update Serving
       ingredient.serving = Number(value);

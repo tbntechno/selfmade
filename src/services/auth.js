@@ -3,7 +3,7 @@ import firebase from "./firebase";
 
 export const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null); // the usage is ONLY for the Navbar (cuz u can call auth anytime)
   const [pending, setPending]         = useState(true);
   
   /*

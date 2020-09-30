@@ -1,13 +1,13 @@
 import React, {useState,useEffect} from 'react';
 import {db} from 'services/firebase';
-import './DietIngredient.scss';
+import './ingredient.scss';
 import check from 'check-types';
 import {nutritionFactsCreate, random} 	from 'utils/utils';
-import {Container, Row, Col} 					          from 'react-bootstrap';
+import {Container, Row, Col} 					  from 'react-bootstrap';
 
 const UNITS = ["gram", "tsp", "tbsp", "milliliter"];
 
-const DietIngredient = () => {
+const Ingredient = () => {
   const [ingredients, setIngredients]               = useState([]);
   const [ingredientsDisplay, setIngredientsDisplay] = useState([]);
 
@@ -43,7 +43,7 @@ const DietIngredient = () => {
       <div className="ingredient-list">
         <ul style={{padding:"0px"}}>
           {ingredientsDisplay && ingredientsDisplay.map((ingredient, index) => {
-            return <Ingredient ingredient={ingredient} key={ingredient.id}/>
+            return <IngredientItem ingredient={ingredient} key={ingredient.id}/>
           })}
         </ul>
       </div>
@@ -51,11 +51,11 @@ const DietIngredient = () => {
     </Container>
   )
 }
-export default DietIngredient;
+export default Ingredient;
 
 
 
-const Ingredient = ({ingredient}) => {
+const IngredientItem = ({ingredient}) => {
   const removeIngredientHandler = (rmID) => {
     const confirmed = window.confirm("You really want to delete this ingredient?");
     if(confirmed){ db.collection('diet_ingredients').doc(rmID).delete()}

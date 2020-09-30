@@ -17,8 +17,8 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Home             from './pages/Home/Home';
 import Register         from './pages/Register/Register';
 import Diet             from './pages/Diet/Diet';
-import DietIngredient   from './pages/Diet_Ingredient/DietIngredient';
-import DietMeal         from './pages/Diet_Meal/DietMeal';
+import Ingredient       from './pages/Ingredient/Ingredient';
+import Meal             from './pages/Meal/Meal';
 import Test             from './pages/Test/Test';
 
 // Components
@@ -37,8 +37,8 @@ const App = () => {
         <Switch>
           <Route          path = "/" exact      component={Home}/>
           <Route          path = "/register"    component={Register}/>
-          <Route          path = "/ingredient"  component={DietIngredient}/>
-          <Route          path = "/meal"        component={DietMeal}/>
+          <Route          path = "/ingredient"  component={Ingredient}/>
+          <Route          path = "/meal"        component={Meal}/>
           <Route          path = "/test"        component={Test}/>
           <ProtectedRoute path = "/logout"      component={Logout}/>
           <ProtectedRoute path = "/diet"        component={Diet}/>
