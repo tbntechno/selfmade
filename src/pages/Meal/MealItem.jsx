@@ -90,7 +90,6 @@ const Meal  = ({meal, setEditMealForm})=>{
 		</Col>
 		<Col xs={12} xs={10}>
 			{/********************* Meals' Ingredients *********************/}
-
 			<div className="meal-border" >
 				<ul>{cleanedUpIngredients.map((ingredient, i)=><MealItemIngredient meal={meal} ingredient={ingredient} key={i}/>)}</ul>
 			</div>
